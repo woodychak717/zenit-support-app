@@ -219,6 +219,24 @@ export default async function TicketManagementPage({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h3 className="font-medium mb-2">Staff Name</h3>
+                      <div className="bg-gray-50 p-3 rounded-lg">
+                        <p className="text-gray-700">
+                          {ticket.staff_name || "Not provided"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-2">Staff Email</h3>
+                      <div className="bg-gray-50 p-3 rounded-lg">
+                        <p className="text-gray-700">
+                          {ticket.staff_email || "Not provided"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                   <div>
                     <h3 className="font-medium mb-2">Description</h3>
                     <div className="bg-gray-50 p-4 rounded-lg">
@@ -291,15 +309,17 @@ export default async function TicketManagementPage({
                           </p>
                           {comment.attachments.length > 0 && (
                             <div className="mt-2 flex flex-wrap gap-2">
-                              {comment.attachments.map((att: TicketAttachment) => (
-                                <ClickableImage
-                                  key={att.file_path}
-                                  src={att.publicUrl}
-                                  alt="Attachment"
-                                  className="max-w-xs max-h-48 rounded border cursor-pointer hover:opacity-80 transition-opacity"
-                                  fileName={att.file_name || "Attachment"}
-                                />
-                              ))}
+                              {comment.attachments.map(
+                                (att: TicketAttachment) => (
+                                  <ClickableImage
+                                    key={att.file_path}
+                                    src={att.publicUrl}
+                                    alt="Attachment"
+                                    className="max-w-xs max-h-48 rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                                    fileName={att.file_name || "Attachment"}
+                                  />
+                                ),
+                              )}
                             </div>
                           )}
                         </div>

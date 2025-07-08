@@ -190,6 +190,20 @@ export default async function TicketDetailPage({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h3 className="font-medium mb-2">Staff Name</h3>
+                      <p className="text-gray-700">
+                        {ticket.staff_name || "Not provided"}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-2">Staff Email</h3>
+                      <p className="text-gray-700">
+                        {ticket.staff_email || "Not provided"}
+                      </p>
+                    </div>
+                  </div>
                   <div>
                     <h3 className="font-medium mb-2">Description</h3>
                     <p className="text-gray-700 whitespace-pre-wrap">

@@ -556,9 +556,18 @@ export const createSupportTicketAction = async (formData: FormData) => {
   const description = formData.get("description")?.toString();
   const priority = formData.get("priority")?.toString();
   const clientId = formData.get("client_id")?.toString();
+  const staffName = formData.get("staff_name")?.toString();
+  const staffEmail = formData.get("staff_email")?.toString();
   const supabase = await createClient();
 
-  if (!title || !description || !priority || !clientId) {
+  if (
+    !title ||
+    !description ||
+    !priority ||
+    !clientId ||
+    !staffName ||
+    !staffEmail
+  ) {
     return encodedRedirect(
       "error",
       `/client-portal/tickets/new?client_id=${clientId}`,
@@ -592,6 +601,8 @@ export const createSupportTicketAction = async (formData: FormData) => {
       status: "open",
       company_id: clientData.company_id,
       client_credential_id: clientId,
+      staff_name: staffName,
+      staff_email: staffEmail,
     })
     .select()
     .single();
@@ -607,7 +618,7 @@ export const createSupportTicketAction = async (formData: FormData) => {
 
   // Send email notification to company owner
   const company = clientData.companies?.[0];
-  
+
   if (company?.owner_id && ticketData) {
     // Get company owner's email
     const { data: ownerData } = await supabase

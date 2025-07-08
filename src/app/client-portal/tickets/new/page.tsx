@@ -121,6 +121,28 @@ export default async function NewTicketPage({
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="staff_name">Staff Name *</Label>
+                  <Input
+                    id="staff_name"
+                    name="staff_name"
+                    type="text"
+                    placeholder="Name of the staff member you're reporting about"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="staff_email">Staff Email *</Label>
+                  <Input
+                    id="staff_email"
+                    name="staff_email"
+                    type="email"
+                    placeholder="Email of the staff member"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="description">Description *</Label>
                   <Textarea
                     id="description"

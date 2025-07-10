@@ -32,6 +32,7 @@ import {
   updateSupportTicketAction,
   addTicketCommentAction,
 } from "../../../actions";
+import { DeleteCommentButton } from "@/components/delete-comment-button";
 import { FormMessage, Message } from "@/components/form-message";
 import { ImagePasteTextarea } from "@/components/image-paste-textarea";
 import { ImageViewerWrapper } from "@/components/image-viewer-wrapper";
@@ -237,16 +238,28 @@ export default async function TicketDetailPage({
                         key={comment.id}
                         className="border-l-4 border-blue-200 pl-4"
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <User className="h-4 w-4 text-gray-500" />
-                          <span className="font-medium">
-                            {comment.author_type === "client"
-                              ? "You"
-                              : "Support Team"}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            {new Date(comment.created_at).toLocaleString()}
-                          </span>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-gray-500" />
+                            <span className="font-medium">
+                              {comment.author_type === "client"
+                                ? "You"
+                                : "Support Team"}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(comment.created_at).toLocaleString()}
+                            </span>
+                          </div>
+                          {comment.author_type === "client" &&
+                            comment.author_id === clientId && (
+                              <DeleteCommentButton
+                                commentId={comment.id}
+                                ticketId={ticket.id}
+                                authorId={clientId}
+                                authorType="client"
+                                clientId={clientId}
+                              />
+                            )}
                         </div>
                         <p className="text-gray-700 whitespace-pre-wrap">
                           {comment.content}

@@ -35,6 +35,7 @@ import {
   addTicketCommentAction,
   updateTicketStatusAction,
 } from "../../../actions";
+import { DeleteCommentButton } from "@/components/delete-comment-button";
 import { FormMessage, Message } from "@/components/form-message";
 import { ImagePasteTextarea } from "@/components/image-paste-textarea";
 import { ImageViewerWrapper } from "@/components/image-viewer-wrapper";
@@ -284,25 +285,36 @@ export default async function TicketManagementPage({
                                 : "bg-green-50 border-l-4 border-green-200"
                           }`}
                         >
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="h-4 w-4" />
-                            <span className="font-medium">
-                              {comment.author_type === "client"
-                                ? ticket.client_credentials?.full_name ||
-                                  ticket.client_credentials?.username ||
-                                  "Client"
-                                : comment.is_internal
-                                  ? "Internal Note"
-                                  : "Support Team"}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              {new Date(comment.created_at).toLocaleString()}
-                            </span>
-                            {comment.is_internal && (
-                              <Badge variant="outline" className="text-xs">
-                                Internal
-                              </Badge>
-                            )}
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <User className="h-4 w-4" />
+                              <span className="font-medium">
+                                {comment.author_type === "client"
+                                  ? ticket.client_credentials?.full_name ||
+                                    ticket.client_credentials?.username ||
+                                    "Client"
+                                  : comment.is_internal
+                                    ? "Internal Note"
+                                    : "Support Team"}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                {new Date(comment.created_at).toLocaleString()}
+                              </span>
+                              {comment.is_internal && (
+                                <Badge variant="outline" className="text-xs">
+                                  Internal
+                                </Badge>
+                              )}
+                            </div>
+                            {comment.author_type === "staff" &&
+                              comment.author_id === user.id && (
+                                <DeleteCommentButton
+                                  commentId={comment.id}
+                                  ticketId={ticket.id}
+                                  authorId={user.id}
+                                  authorType="staff"
+                                />
+                              )}
                           </div>
                           <p className="text-gray-700 whitespace-pre-wrap">
                             {comment.content}

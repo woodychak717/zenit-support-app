@@ -158,6 +158,20 @@ export default async function NewTicketPage({
                     Tips for better support:
                   </h3>
                   <ul className="text-sm text-blue-800 space-y-1">
+                    <li>
+                      • Download SOS from{" "}
+                      <a
+                        href="https://sos.splashtop.com/"
+                        style={{
+                          color: "#007BFF",
+                          textDecoration: "underline",
+                          fontWeight: "bold",
+                        }}
+                        target="_blank"
+                      >
+                        HERE
+                      </a>
+                    </li>
                     <li>• Be specific about what you were trying to do</li>
                     <li>• Include any error messages you received</li>
                     <li>• Mention your browser/device if relevant</li>

@@ -891,3 +891,84 @@ export const updateTicketStatusAction = async (formData: FormData) => {
 
   return redirect(`/dashboard/tickets/${ticketId}`);
 };
+
+export const deleteTicketCommentAction = async (formData: FormData) => {
+  const commentId = formData.get("comment_id")?.toString();
+  const ticketId = formData.get("ticket_id")?.toString();
+  const authorId = formData.get("author_id")?.toString();
+  const authorType = formData.get("author_type")?.toString();
+  const clientId = formData.get("client_id")?.toString();
+  const supabase = await createClient();
+
+  if (!commentId || !ticketId || !authorId || !authorType) {
+    const redirectPath =
+      authorType === "client"
+        ? `/client-portal/tickets/${ticketId}?client_id=${clientId}`
+        : `/dashboard/tickets/${ticketId}`;
+    return encodedRedirect(
+      "error",
+      redirectPath,
+      "Missing required information",
+    );
+  }
+
+  // Get the comment to verify ownership
+  const { data: comment, error: commentError } = await supabase
+    .from("ticket_comments")
+    .select("id, author_id, author_type, ticket_id")
+    .eq("id", commentId)
+    .single();
+
+  if (commentError || !comment) {
+    const redirectPath =
+      authorType === "client"
+        ? `/client-portal/tickets/${ticketId}?client_id=${clientId}`
+        : `/dashboard/tickets/${ticketId}`;
+    return encodedRedirect("error", redirectPath, "Comment not found");
+  }
+
+  // Verify ownership - users can only delete their own comments
+  if (comment.author_id !== authorId || comment.author_type !== authorType) {
+    const redirectPath =
+      authorType === "client"
+        ? `/client-portal/tickets/${ticketId}?client_id=${clientId}`
+        : `/dashboard/tickets/${ticketId}`;
+    return encodedRedirect(
+      "error",
+      redirectPath,
+      "You can only delete your own comments",
+    );
+  }
+
+  // Delete associated attachments first
+  const { error: attachmentError } = await supabase
+    .from("ticket_attachments")
+    .delete()
+    .eq("comment_id", commentId);
+
+  if (attachmentError) {
+    console.error("Error deleting comment attachments:", attachmentError);
+  }
+
+  // Delete the comment
+  const { error: deleteError } = await supabase
+    .from("ticket_comments")
+    .delete()
+    .eq("id", commentId);
+
+  if (deleteError) {
+    console.error("Error deleting comment:", deleteError);
+    const redirectPath =
+      authorType === "client"
+        ? `/client-portal/tickets/${ticketId}?client_id=${clientId}`
+        : `/dashboard/tickets/${ticketId}`;
+    return encodedRedirect("error", redirectPath, "Failed to delete comment");
+  }
+
+  // Redirect back to the ticket
+  const redirectPath =
+    authorType === "client"
+      ? `/client-portal/tickets/${ticketId}?client_id=${clientId}`
+      : `/dashboard/tickets/${ticketId}`;
+  return redirect(redirectPath);
+};
